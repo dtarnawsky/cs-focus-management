@@ -4,4 +4,4 @@ This is an attempt to handle focus management through use of the Angular Router 
 the correct element to focus on the page. The concept is to ensure the screen reader will announce the correct
 element when navigating to a page.
 
-See [router-focus.service.ts](./src/services/router-focus.service.ts)
+See [router-focus.service.ts](./src/app/services/router-focus.service.ts)

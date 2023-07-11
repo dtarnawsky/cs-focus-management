@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
+import { Capacitor } from '@capacitor/core';
 import { ScreenReader } from '@capacitor/screen-reader';
 
 @Injectable({
@@ -46,11 +47,13 @@ export class RouterFocusService {
 
             // We need to set tabindex to -1 and focus the element for the screen reader to read what we want
             (e as HTMLElement).setAttribute('tabindex', '-1');
+
+            if (Capacitor.isNativePlatform()) {
+                // This will prevent the visual change for keyboard
+                (e as HTMLElement).setAttribute('outline', 'none');
+            }
+
             (e as HTMLElement).focus();
-            setTimeout(()=> {
-                // This ensures the focus outline doesnt remain on the element
-                (e as HTMLElement).blur();
-            }, 50);
         }
     }
 

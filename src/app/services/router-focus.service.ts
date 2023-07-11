@@ -15,10 +15,18 @@ export class RouterFocusService {
 
     private async focusFirst(event: RouterEvent) {
         if (event instanceof NavigationEnd) {
+            // Ignore if the screen reader is not enabled
+            if (!ScreenReader.isEnabled()) {
+                return;
+            }
+
             // This prevents reading of previously focused element
             await ScreenReader.speak({ value: '	 ' });
 
+            // We look for an element on an ion-content that we want to focus
             const all = document.getElementsByClassName('page-focus');
+
+            // We repeatedly look as the previous page will eventually disappear and the new one will animate in
             let repeat = true;
             let e: Element;
             while (repeat) {
@@ -35,8 +43,14 @@ export class RouterFocusService {
                 }
             }
             console.log(`Focus on ${e.tagName}`);
-            (e as HTMLElement).setAttribute('tab-index', '0');
+
+            // We need to set tabindex to -1 and focus the element for the screen reader to read what we want
+            (e as HTMLElement).setAttribute('tabindex', '-1');
             (e as HTMLElement).focus();
+            setTimeout(()=> {
+                // This ensures the focus outline doesnt remain on the element
+                (e as HTMLElement).blur();
+            }, 50);
         }
     }
 
